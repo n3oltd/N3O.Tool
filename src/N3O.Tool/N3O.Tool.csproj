@@ -28,7 +28,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
         <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.7.1" />
         <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.7.1" />
-        <PackageReference Include="Spectre.Console" Version="0.57.1" />
+        <PackageReference Include="Spectre.Console" Version="0.57.2" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Embedded\speed.flf" />
