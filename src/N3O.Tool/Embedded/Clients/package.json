@@ -10,7 +10,7 @@
   "devDependencies": {
     "minimist": "^1.2.6",
     "shx": "^0.3.4",
-    "typescript": "^3.5.3",
+    "typescript": "^5.6.3",
     "uglify-js": "^3.6.0"
   },
   "repository": {
