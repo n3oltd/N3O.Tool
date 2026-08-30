@@ -3,7 +3,10 @@ using N3O.Tool.Utilities;
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag.CodeGeneration;
 using NSwag.CodeGeneration.TypeScript;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace N3O.Tool.Commands.Clients;
@@ -48,10 +51,14 @@ public partial class ClientsCommand {
         GenerateTsConfig();
         File.WriteAllText(System.IO.Path.Combine(OutputPath, "README.md"), PackageDescription);
 
-        _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "install", workingDirectory: OutputPath).WaitForExit();
-        _shell.Run(@"C:\Program Files\nodejs\npm.cmd", "run build", workingDirectory: OutputPath).WaitForExit();
+        RunNpm("install");
+        RunNpm("run build");
 
-        Directory.Delete(System.IO.Path.Combine(OutputPath, "node_modules"), true);
+        var nodeModules = System.IO.Path.Combine(OutputPath, "node_modules");
+
+        if (Directory.Exists(nodeModules)) {
+            Directory.Delete(nodeModules, true);
+        }
     }
 
     private void GeneratePackageJson() {
@@ -77,5 +84,20 @@ public partial class ClientsCommand {
         _logger.LogDebug(outputContent);
 
         File.WriteAllText(outputFile, outputContent);
+    }
+
+    private void RunNpm(string args) {
+        var npm = Host.IsWindows ? "npm.cmd" : "npm";
+        var output = new List<string>();
+
+        var process = _shell.Run(npm, args, x => output.Add(x), workingDirectory: OutputPath);
+
+        process.WaitForExit();
+
+        if (process.ExitCode != 0) {
+            var detail = string.Join(Environment.NewLine, output.Where(x => !string.IsNullOrWhiteSpace(x)));
+
+            throw new Exception($"{npm} {args} exited with code {process.ExitCode}{Environment.NewLine}{detail}");
+        }
     }
 }
