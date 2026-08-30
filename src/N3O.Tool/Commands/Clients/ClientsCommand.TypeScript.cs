@@ -4,7 +4,9 @@ using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag.CodeGeneration;
 using NSwag.CodeGeneration.TypeScript;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace N3O.Tool.Commands.Clients;
@@ -86,12 +88,16 @@ public partial class ClientsCommand {
 
     private void RunNpm(string args) {
         var npm = Host.IsWindows ? "npm.cmd" : "npm";
-        var process = _shell.Run(npm, args, workingDirectory: OutputPath);
+        var output = new List<string>();
+
+        var process = _shell.Run(npm, args, x => output.Add(x), workingDirectory: OutputPath);
 
         process.WaitForExit();
 
         if (process.ExitCode != 0) {
-            throw new Exception($"{npm} {args} exited with code {process.ExitCode}");
+            var detail = string.Join(Environment.NewLine, output.Where(x => !string.IsNullOrWhiteSpace(x)));
+
+            throw new Exception($"{npm} {args} exited with code {process.ExitCode}{Environment.NewLine}{detail}");
         }
     }
 }
