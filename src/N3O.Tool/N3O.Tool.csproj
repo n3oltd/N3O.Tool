@@ -8,7 +8,7 @@
         <ToolCommandName>n3o-tool</ToolCommandName>
         <RootNamespace>N3O.Tool</RootNamespace>
         <AssemblyName>n3o-tool</AssemblyName>
-        <PackageReadmeFile>nuget.md</PackageReadmeFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <Authors>N3O Ltd</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Description>The N3O dotnet tool</Description>
@@ -37,7 +37,7 @@
         <EmbeddedResource Include="Embedded\Clients\tsconfig.json" />
     </ItemGroup>
     <ItemGroup>
-        <None Update="nuget.md">
+        <None Update="README.md">
             <Pack>True</Pack>
         </None>
     </ItemGroup>
